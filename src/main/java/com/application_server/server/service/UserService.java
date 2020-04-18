@@ -2,13 +2,16 @@ package com.application_server.server.service;
 
 import com.application_server.server.model.Role;
 import com.application_server.server.model.User;
+import com.application_server.server.model.UserForm;
 import com.application_server.server.repository.RoleRepository;
 import com.application_server.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService implements CustomService<User> {
@@ -47,27 +50,40 @@ public class UserService implements CustomService<User> {
         userRepository.delete(user);
     }
 
-//TODO присваивать роль по имени
-    public void addUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        Long idRole;
-//        if (user.getRole().contains("ROLE_ADMIN")) {
-//            idRole = 2L;
-//        } else {
-//            idRole = 1L;
-//        }
-        Role role = roleRepository.findRoleById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid role"));
-        user.getRole().add(role);
-        userRepository.save(user);
+    //TODO
+    public User addUser(UserForm userForm) {
+        User user = new User(userForm.getUsername(),
+                             userForm.getEmail(),
+                             passwordEncoder.encode(userForm.getPassword()),
+                             getSetRole(userForm.getRole()));
+
+       return userRepository.save(user);
     }
-//TODO
-    public void updateUserById(Long id, User user) {
+
+    //TODO
+    public User updateUserById(Long id, UserForm userForm) {
         User oldUser = userRepository.findUserById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        oldUser.setUsername(user.getUsername());
-        oldUser.setEmail(user.getEmail());
-        userRepository.save(oldUser);
+        oldUser.setUsername(userForm.getUsername());
+        oldUser.setEmail(userForm.getEmail());
+        oldUser.setRole(getSetRole(userForm.getRole()));
+
+        return  userRepository.save(oldUser);
+    }
+
+    protected Set<Role> getSetRole(String role) {
+        Set<Role> roleSet = new HashSet<>();
+        long idRole;
+        if (role.equals("ROLE_ADMIN")) {
+            idRole = 2L;
+        } else {
+            idRole = 1L;
+        }
+        Role roleName = roleRepository.findRoleById(idRole)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid role"));
+
+        roleSet.add(roleName);
+        return roleSet;
     }
 
 }

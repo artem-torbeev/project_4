@@ -1,11 +1,9 @@
 package com.application_server.server.restController;
 
-import com.application_server.server.model.User;
-import com.application_server.server.repository.UserRepository;
+import com.application_server.server.model.Role;
+import com.application_server.server.model.UserJwt;
 import com.application_server.server.security.JwtTokenProvider;
 import com.application_server.server.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.ResponseEntity.ok;
@@ -41,26 +40,32 @@ public class LoginRestController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody User user) {
+    public ResponseEntity<UserJwt> login(@RequestBody UserJwt user) {
 
         try {
+//            TODO Enter email instead of password => "email":"admin@com"
             String email = user.getEmail();
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, user.getPassword()));
-            String token = jwtTokenProvider.createToken(email, userService.findUserByEmail(email).getRole());
+            String password= user.getPassword();
+            Set<Role> roleSet = userService.findUserByEmail(email).getRole();
 
-            Map<Object, Object> model = new HashMap<>();
-            model.put("email", email);
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            String token = jwtTokenProvider.createToken(email, roleSet);
+
+            Map<String, Object> model = new HashMap<>();
             model.put("token", token);
-            return ok(model);
+            model.put("role", roleSet.stream().map(Role::getRole).collect(toList()));
+
+            return ResponseEntity.ok(new UserJwt(email, model));
 
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username/password supplied");
         }
     }
 
+     //TODO
     @GetMapping("/me")
-    public ResponseEntity currentUser(@AuthenticationPrincipal UserDetails userDetails) {
-        Map<Object, Object> model = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> currentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        Map<String, Object> model = new HashMap<>();
         model.put("username", userDetails.getUsername());
         model.put("roles", userDetails.getAuthorities()
                 .stream()

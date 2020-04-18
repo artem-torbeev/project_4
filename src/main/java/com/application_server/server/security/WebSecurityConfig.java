@@ -1,8 +1,6 @@
 package com.application_server.server.security;
 
 import com.application_server.server.service.CustomerUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,7 +42,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login", "/me").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
     }
@@ -62,16 +59,3 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 }
-
-
-
-/*    @Autowired
-   public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-       auth.jdbcAuthentication().dataSource(dataSource)
-               .usersByUsernameQuery("select email, password, 'true' from user where email =?")
-                .authoritiesByUsernameQuery("SELECT user.email, type_role " +
-                        "FROM user join user_role ur on user.id = ur.owner_id " +
-                        "join role r on ur.role_id = r.id where user.email =?")
-                .passwordEncoder(getPasswordEncoder());
-    }
-*/

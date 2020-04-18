@@ -51,6 +51,13 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public User(String email, String username, String password, Set<Role> role) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
     public Long getId() {
         return id;
     }
@@ -117,5 +124,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }

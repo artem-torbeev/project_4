@@ -3,7 +3,6 @@ package com.application_server.server.security;
 import com.application_server.server.model.Role;
 import com.application_server.server.service.CustomerUserDetailsService;
 import io.jsonwebtoken.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,10 +14,12 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Set;
 
+import static java.util.stream.Collectors.toList;
+
 @Component
 public class JwtTokenProvider {
 
-    private String secret= "test";
+    private String secret = "test";
 
     private final CustomerUserDetailsService userDetailsService;
 
@@ -32,9 +33,9 @@ public class JwtTokenProvider {
     }
 
     public String createToken(String email, Set<Role> roles) {
-
+        //todo можно без role
         Claims claims = Jwts.claims().setSubject(email);
-        claims.put("roles", roles);
+        claims.put("roles", roles.stream().map(Role::getRole).collect(toList()));
 
         Date now = new Date();
         long validityInMillisecond = 600000;
@@ -61,7 +62,6 @@ public class JwtTokenProvider {
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
-//            return bearerToken.replace("Bearer ","");
         }
         return null;
     }
@@ -80,3 +80,31 @@ public class JwtTokenProvider {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+/*
+*
+* public Authentication getAuthentication(HttpServletRequest request) {
+    String token = request.getHeader(HEADER_STRING);
+    if (token != null) {
+        // parse the token.
+        String user = getUsername(token);
+
+        String roles = getBody(token).get("roles", String.class);
+        List<GrantedAuthority> grantedAuths =
+                AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
+
+        return user != null ?
+                new UsernamePasswordAuthenticationToken(user, null,
+                        grantedAuths) :
+                null;
+    }
+    return null;
+}*/
