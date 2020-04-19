@@ -3,8 +3,6 @@ package com.application_server.server.service;
 import com.application_server.server.model.Role;
 import com.application_server.server.model.User;
 import com.application_server.server.model.UserDto;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -26,11 +24,7 @@ public class UserFactory {
                 getListAuthority(new ArrayList<>(user.getRole()))
         );
     }
-
-    private List<GrantedAuthority> getListAuthority(List<Role> userRoles) {
-        return userRoles.stream()
-                .map(role ->
-                        new SimpleGrantedAuthority(role.getRole())
-                ).collect(Collectors.toList());
+    private List<String> getListAuthority (List<Role> userRole){
+        return userRole.stream().map(Role::getRole).collect(Collectors.toList());
     }
 }

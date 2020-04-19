@@ -1,7 +1,5 @@
 package com.application_server.server.model;
 
-import org.springframework.security.core.GrantedAuthority;
-
 import java.util.List;
 
 public class UserDto {
@@ -13,9 +11,9 @@ public class UserDto {
 
     private String password;
 
-    private List<GrantedAuthority> role;
+    private List<String> role;
 
-    public UserDto(long id, String username, String email, String password, List<GrantedAuthority> role) {
+    public UserDto(long id, String username, String email, String password, List<String> role) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -23,7 +21,7 @@ public class UserDto {
         this.role = role;
     }
 
-    public UserDto(String username, String email, String password, List<GrantedAuthority> role) {
+    public UserDto(String username, String email, String password, List<String> role) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -65,11 +63,11 @@ public class UserDto {
         this.password = password;
     }
 
-    public List<GrantedAuthority> getRole() {
+    public List<String> getRole() {
         return role;
     }
 
-    public void setRole(List<GrantedAuthority> role) {
+    public void setRole(List<String> role) {
         this.role = role;
     }
 }

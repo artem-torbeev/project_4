@@ -2,7 +2,6 @@ package com.application_server.server.restController;
 
 import com.application_server.server.model.User;
 import com.application_server.server.model.UserDto;
-import com.application_server.server.model.UserForm;
 import com.application_server.server.service.UserFactory;
 import com.application_server.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,7 @@ public class AdminRestController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserForm user){
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto user){
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -53,7 +52,7 @@ public class AdminRestController {
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<UserDto> editUser(@RequestBody UserForm user) {
+    public ResponseEntity<UserDto> editUser(@RequestBody UserDto user) {
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -74,7 +73,7 @@ public class AdminRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
-        return new ResponseEntity<>("User delete", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("User was deleted ...", HttpStatus.NO_CONTENT);
     }
 }
 

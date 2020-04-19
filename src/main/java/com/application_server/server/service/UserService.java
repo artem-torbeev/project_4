@@ -2,7 +2,7 @@ package com.application_server.server.service;
 
 import com.application_server.server.model.Role;
 import com.application_server.server.model.User;
-import com.application_server.server.model.UserForm;
+import com.application_server.server.model.UserDto;
 import com.application_server.server.repository.RoleRepository;
 import com.application_server.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,26 +51,27 @@ public class UserService implements CustomService<User> {
     }
 
     //TODO
-    public User addUser(UserForm userForm) {
-        User user = new User(userForm.getUsername(),
-                             userForm.getEmail(),
-                             passwordEncoder.encode(userForm.getPassword()),
-                             getSetRole(userForm.getRole()));
+    public User addUser(UserDto userDto) {
+        User user = new User(userDto.getUsername(),
+                userDto.getEmail(),
+                passwordEncoder.encode(userDto.getPassword()),
+                getSetRole(userDto.getRole().get(0)));
 
-       return userRepository.save(user);
+        return userRepository.save(user);
     }
 
     //TODO
-    public User updateUserById(Long id, UserForm userForm) {
+    public User updateUserById(Long id, UserDto userDto) {
         User oldUser = userRepository.findUserById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        oldUser.setUsername(userForm.getUsername());
-        oldUser.setEmail(userForm.getEmail());
-        oldUser.setRole(getSetRole(userForm.getRole()));
+        oldUser.setUsername(userDto.getUsername());
+        oldUser.setEmail(userDto.getEmail());
+        oldUser.setRole(getSetRole(userDto.getRole().get(0)));
 
-        return  userRepository.save(oldUser);
+        return userRepository.save(oldUser);
     }
 
+    //get set role
     protected Set<Role> getSetRole(String role) {
         Set<Role> roleSet = new HashSet<>();
         long idRole;

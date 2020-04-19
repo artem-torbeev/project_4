@@ -43,7 +43,7 @@ public class LoginRestController {
     public ResponseEntity<UserJwt> login(@RequestBody UserJwt user) {
 
         try {
-//            TODO Enter email instead of password => "email":"admin@com"
+//            TODO Enter email instead of password json => "email":"admin@com"
             String email = user.getEmail();
             String password= user.getPassword();
             Set<Role> roleSet = userService.findUserByEmail(email).getRole();
@@ -62,7 +62,7 @@ public class LoginRestController {
         }
     }
 
-     //TODO
+     //TODO test Security
     @GetMapping("/me")
     public ResponseEntity<Map<String, Object>> currentUser(@AuthenticationPrincipal UserDetails userDetails) {
         Map<String, Object> model = new HashMap<>();
