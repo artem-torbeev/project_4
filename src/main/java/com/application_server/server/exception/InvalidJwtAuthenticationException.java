@@ -1,4 +1,4 @@
-package com.application_server.server.security;
+package com.application_server.server.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

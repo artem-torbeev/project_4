@@ -1,5 +1,6 @@
 package com.application_server.server.security;
 
+import com.application_server.server.exception.InvalidJwtAuthenticationException;
 import com.application_server.server.model.Role;
 import com.application_server.server.service.CustomerUserDetailsService;
 import io.jsonwebtoken.*;
@@ -69,42 +70,10 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-
-            if (claims.getBody().getExpiration().before(new Date())) {
-                return false;
-            }
-
-            return true;
+            //Проверяет, предшествует ли эта дата указанной дате.
+            return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-            throw new InvalidJwtAuthenticationException("Expired or invalid JWT token");
+            throw new InvalidJwtAuthenticationException("Expired or invalid JWT token ...");
         }
     }
 }
-
-
-
-
-
-
-
-
-
-/*
-*
-* public Authentication getAuthentication(HttpServletRequest request) {
-    String token = request.getHeader(HEADER_STRING);
-    if (token != null) {
-        // parse the token.
-        String user = getUsername(token);
-
-        String roles = getBody(token).get("roles", String.class);
-        List<GrantedAuthority> grantedAuths =
-                AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
-
-        return user != null ?
-                new UsernamePasswordAuthenticationToken(user, null,
-                        grantedAuths) :
-                null;
-    }
-    return null;
-}*/

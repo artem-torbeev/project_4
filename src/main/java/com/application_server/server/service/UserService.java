@@ -49,7 +49,6 @@ public class UserService implements CustomService<User> {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         userRepository.delete(user);
     }
-
     //TODO
     public User addUser(UserDto userDto) {
         User user = new User(userDto.getUsername(),
@@ -59,7 +58,6 @@ public class UserService implements CustomService<User> {
 
         return userRepository.save(user);
     }
-
     //TODO
     public User updateUserById(Long id, UserDto userDto) {
         User oldUser = userRepository.findUserById(id)
@@ -70,7 +68,6 @@ public class UserService implements CustomService<User> {
 
         return userRepository.save(oldUser);
     }
-
     //get set role
     protected Set<Role> getSetRole(String role) {
         Set<Role> roleSet = new HashSet<>();
@@ -86,5 +83,4 @@ public class UserService implements CustomService<User> {
         roleSet.add(roleName);
         return roleSet;
     }
-
 }
