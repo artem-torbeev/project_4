@@ -4,6 +4,7 @@ import com.application_server.server.exception.InvalidJwtAuthenticationException
 import com.application_server.server.model.Role;
 import com.application_server.server.service.CustomerUserDetailsService;
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,7 @@ public class JwtTokenProvider {
 
     private final CustomerUserDetailsService userDetailsService;
 
+    @Autowired
     public JwtTokenProvider(CustomerUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
@@ -34,10 +36,9 @@ public class JwtTokenProvider {
     }
 
     public String createToken(String email, Set<Role> roles) {
-        //todo можно без role
-        Claims claims = Jwts.claims().setSubject(email);
-        claims.put("roles", roles.stream().map(Role::getRole).collect(toList()));
 
+        Claims claims = Jwts.claims().setSubject(email);
+//        claims.put("roles", roles.stream().map(Role::getRole).collect(toList()));
         Date now = new Date();
         long validityInMillisecond = 600000;
         Date validity = new Date(now.getTime() + validityInMillisecond);

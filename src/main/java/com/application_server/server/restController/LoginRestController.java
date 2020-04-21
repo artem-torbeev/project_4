@@ -4,6 +4,7 @@ import com.application_server.server.model.Role;
 import com.application_server.server.model.UserJwt;
 import com.application_server.server.security.JwtTokenProvider;
 import com.application_server.server.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,13 +25,11 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping
 public class LoginRestController {
-
     private final AuthenticationManager authenticationManager;
-
     private final JwtTokenProvider jwtTokenProvider;
-
     private final UserService userService;
 
+    @Autowired
     public LoginRestController(AuthenticationManager authenticationManager,
                                JwtTokenProvider jwtTokenProvider,
                                UserService userService) {
@@ -61,7 +60,6 @@ public class LoginRestController {
             throw new BadCredentialsException("Invalid username/password supplied");
         }
     }
-
      //TODO test Security
     @GetMapping("/me")
     public ResponseEntity<Map<String, Object>> currentUser(@AuthenticationPrincipal UserDetails userDetails) {
@@ -74,5 +72,4 @@ public class LoginRestController {
         );
         return ok(model);
     }
-
 }

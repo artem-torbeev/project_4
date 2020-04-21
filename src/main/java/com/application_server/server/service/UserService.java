@@ -15,10 +15,8 @@ import java.util.Set;
 
 @Service
 public class UserService implements CustomService<User> {
-
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
@@ -26,23 +24,19 @@ public class UserService implements CustomService<User> {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }
-
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
-
     @Override
     public User findUserById(Long id) {
         return userRepository.findUserById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
     }
-
     @Override
     public User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
-
     @Override
     public void deleteUserById(Long id) {
         User user = userRepository.findUserById(id)

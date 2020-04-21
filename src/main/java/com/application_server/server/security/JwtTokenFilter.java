@@ -12,13 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class JwtTokenFilter extends GenericFilterBean {
-
     private JwtTokenProvider jwtTokenProvider;
 
     public JwtTokenFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
-
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
             throws IOException, ServletException {
@@ -30,9 +28,7 @@ public class JwtTokenFilter extends GenericFilterBean {
             if (auth != null) {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
-
         }
         filterChain.doFilter(req, res);
     }
-
 }

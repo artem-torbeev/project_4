@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class UserFactory {
 
     public UserFactory() {
+
     }
 
     public UserDto create(User user) {
