@@ -24,35 +24,40 @@ public class UserService implements CustomService<User> {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }
+
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
+
     @Override
     public User findUserById(Long id) {
         return userRepository.findUserById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
     }
+
     @Override
     public User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
+
     @Override
     public void deleteUserById(Long id) {
         User user = userRepository.findUserById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         userRepository.delete(user);
     }
-    //TODO
+
     public User addUser(UserDto userDto) {
-        User user = new User(userDto.getUsername(),
+        User user = new User(
                 userDto.getEmail(),
+                userDto.getUsername(),
                 passwordEncoder.encode(userDto.getPassword()),
                 getSetRole(userDto.getRole().get(0)));
 
         return userRepository.save(user);
     }
-    //TODO
+
     public User updateUserById(Long id, UserDto userDto) {
         User oldUser = userRepository.findUserById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
@@ -62,6 +67,7 @@ public class UserService implements CustomService<User> {
 
         return userRepository.save(oldUser);
     }
+
     //get set role
     protected Set<Role> getSetRole(String role) {
         Set<Role> roleSet = new HashSet<>();

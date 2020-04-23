@@ -15,20 +15,25 @@ public class UserDto {
 
     public UserDto(long id, String username, String email, String password, List<String> role) {
         this.id = id;
-        this.username = username;
         this.email = email;
+        this.username = username;
         this.password = password;
         this.role = role;
     }
 
     public UserDto(String username, String email, String password, List<String> role) {
-        this.username = username;
         this.email = email;
+        this.username = username;
         this.password = password;
         this.role = role;
     }
 
     public UserDto() {
+    }
+
+    public UserDto(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     public long getId() {

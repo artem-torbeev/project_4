@@ -5,6 +5,7 @@ import com.application_server.server.model.UserJwt;
 import com.application_server.server.security.JwtTokenProvider;
 import com.application_server.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -42,9 +44,14 @@ public class LoginRestController {
     public ResponseEntity<UserJwt> login(@RequestBody UserJwt user) {
 
         try {
-//            TODO Enter email instead of password json => "email":"admin@com"
+            // Enter email instead of password json => "email":"admin@com"
             String email = user.getEmail();
-            String password= user.getPassword();
+            String password = user.getPassword();
+
+            if (userService.findUserByEmail(email) == null) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
             Set<Role> roleSet = userService.findUserByEmail(email).getRole();
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
@@ -60,7 +67,8 @@ public class LoginRestController {
             throw new BadCredentialsException("Invalid username/password supplied");
         }
     }
-     //TODO test Security
+
+    // test Security
     @GetMapping("/me")
     public ResponseEntity<Map<String, Object>> currentUser(@AuthenticationPrincipal UserDetails userDetails) {
         Map<String, Object> model = new HashMap<>();
