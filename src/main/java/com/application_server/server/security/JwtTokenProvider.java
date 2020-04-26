@@ -40,7 +40,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(email);
 //        claims.put("roles", roles.stream().map(Role::getRole).collect(toList()));
         Date now = new Date();
-        long validityInMillisecond = 600000;
+        long validityInMillisecond = 1800000;
         Date validity = new Date(now.getTime() + validityInMillisecond);
 
         return Jwts.builder()

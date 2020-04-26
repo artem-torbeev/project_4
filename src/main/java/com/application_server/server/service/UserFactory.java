@@ -19,8 +19,8 @@ public class UserFactory {
     public UserDto create(User user) {
         return new UserDto(
                 user.getId(),
-                user.getEmail(),
                 user.getUsername(),
+                user.getEmail(),
                 user.getPassword(),
                 getListAuthority(new ArrayList<>(user.getRole()))
         );
