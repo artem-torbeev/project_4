@@ -42,6 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
+
     }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
